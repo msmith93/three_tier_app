@@ -1,7 +1,7 @@
 # Based on https://registry.terraform.io/modules/iplabs/alb-ingress-controller/kubernetes/latest
 
 locals {
-   # Your AWS EKS Cluster ID goes here.
+  # Your AWS EKS Cluster ID goes here.
   k8s_cluster_name = local.cluster_name
 }
 
@@ -16,7 +16,7 @@ data "aws_eks_cluster_auth" "aws_iam_authenticator" {
 }
 
 provider "kubernetes" {
-  alias = "eks"
+  alias                  = "eks"
   host                   = data.aws_eks_cluster.cluster.endpoint
   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
   token                  = data.aws_eks_cluster_auth.cluster.token
