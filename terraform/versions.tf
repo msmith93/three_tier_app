@@ -1,4 +1,9 @@
 terraform {
+  backend "s3" {
+    bucket = "mksmithterraformstate"
+    key    = "three_tier_app"
+    region = "us-west-2"
+  }
   required_providers {
     aws = {
       source  = "hashicorp/aws"
