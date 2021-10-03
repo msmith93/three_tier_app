@@ -5,6 +5,11 @@
 replicaCount: 1
 containerPort: 5000
 
+nginx:
+  tag: "latest"
+  pullPolicy: IfNotPresent
+  port: 80
+
 image:
   repository: 148660894061.dkr.ecr.us-west-2.amazonaws.com/helloworld
   pullPolicy: IfNotPresent

@@ -51,7 +51,25 @@ on:
   pull_request:
 
 jobs:
-  build:
+  chart:
+    name: 'Build Helm Chart'
+    runs-on: ubuntu-latest
+    environment: production
+    defaults:
+      run:
+        shell: bash
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Install Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: v3.4.0
+    - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.2.1
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+  docker:
     name: 'Build Container Image'
     runs-on: ubuntu-latest
     environment: production

@@ -25,6 +25,12 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       serviceAccountName: {{ include "helloworld.serviceAccountName" . }}
+      volumes:
+      - name: nginx-config-volume
+        configMap:
+          # Provide the name of the ConfigMap containing the files you want
+          # to add to the container
+          name: nginx-config
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
@@ -34,17 +40,39 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
-            - name: http
+            - name: hello-http
               containerPort: {{ .Values.containerPort }}
+              protocol: TCP
+          # livenessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: hello-http
+          # readinessProbe:
+          #   httpGet:
+          #     path: /
+          #     port: hello-http
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+        - name: nginx
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "nginx:{{ .Values.nginx.tag }}"
+          imagePullPolicy: {{ .Values.nginx.pullPolicy }}
+          ports:
+            - name: nginx-http
+              containerPort: {{ .Values.nginx.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /health
+              port: nginx-http
           readinessProbe:
             httpGet:
-              path: /
-              port: http
+              path: /health
+              port: nginx-http
+          volumeMounts:
+          - name: nginx-config-volume
+            mountPath: /etc/nginx/conf.d
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
