@@ -1,0 +1,13 @@
+services:
+  helloworld:
+    image: flask-tutorial:latest
+    build:
+      context: .
+    ports:
+      - '5000:5000'
+  nginx:
+    image: nginx:latest
+    volumes:
+    - ./nginx_include/conf.d:/etc/nginx/conf.d
+    ports:
+    - "80:80"
