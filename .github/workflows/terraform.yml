@@ -51,6 +51,7 @@ on:
   pull_request:
 
 jobs:
+  # Use GitHub as helm repo: https://helm.sh/docs/howto/chart_releaser_action/
   chart:
     name: 'Build Helm Chart'
     runs-on: ubuntu-latest
@@ -108,7 +109,7 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
   terraform:
-    needs: docker
+    needs: [docker, chart]
     name: 'Terraform'
     runs-on: ubuntu-latest
     environment: production

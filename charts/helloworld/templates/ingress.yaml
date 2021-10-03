@@ -13,6 +13,9 @@ metadata:
     {{- include "helloworld.labels" . | nindent 4 }}
   {{- with .Values.ingress.annotations }}
   annotations:
+    {{- if .Values.ingress_cert }}
+    alb.ingress.kubernetes.io/certificate-arn: {{ .Values.ingress_cert }}
+    {{- end }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
@@ -28,7 +31,8 @@ spec:
   {{- end }}
   rules:
     {{- range .Values.ingress.hosts }}
-    - http:
+    - host: {{ .host | quote }}
+      http:
         paths:
           {{- range .paths }}
           - path: {{ . }}

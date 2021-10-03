@@ -15,20 +15,20 @@ data "aws_eks_cluster_auth" "aws_iam_authenticator" {
   name = data.aws_eks_cluster.target.name
 }
 
-provider "kubernetes" {
-  alias                  = "eks"
-  host                   = data.aws_eks_cluster.cluster.endpoint
-  cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
-  token                  = data.aws_eks_cluster_auth.cluster.token
-}
+# provider "kubernetes" {
+#   alias                  = "eks"
+#   host                   = data.aws_eks_cluster.cluster.endpoint
+#   cluster_ca_certificate = base64decode(data.aws_eks_cluster.cluster.certificate_authority.0.data)
+#   token                  = data.aws_eks_cluster_auth.cluster.token
+# }
 
 module "alb_ingress_controller" {
   source  = "iplabs/alb-ingress-controller/kubernetes"
   version = "3.1.0"
 
-  providers = {
-    kubernetes = kubernetes.eks
-  }
+  # providers = {
+  #   kubernetes = kubernetes
+  # }
 
   k8s_cluster_type = "eks"
   k8s_namespace    = "kube-system"
