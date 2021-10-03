@@ -1,6 +1,6 @@
 services:
   helloworld:
-    image: flask-tutorial:latest
+    image: helloworld:latest
     build:
       context: .
     ports:
