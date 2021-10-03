@@ -102,7 +102,7 @@ jobs:
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
   terraform:
-    needs: build
+    needs: docker
     name: 'Terraform'
     runs-on: ubuntu-latest
     environment: production
