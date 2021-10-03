@@ -61,6 +61,9 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    # Fetch full history for chart-releaser
+    - name: Fetch history
+      run: git fetch --prune --unshallow
     - name: Install Helm
       uses: azure/setup-helm@v1
       with:
