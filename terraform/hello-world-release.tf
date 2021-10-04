@@ -26,7 +26,7 @@ resource "helm_release" "hello_world_release" {
   }
 
   set {
-    name = "ingress_cert"
+    name  = "ingress_cert"
     value = aws_acm_certificate.arn
   }
 
