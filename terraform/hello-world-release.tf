@@ -22,7 +22,7 @@ resource "helm_release" "hello_world_release" {
   }
 
   set {
-    name = "ingress_cert"
+    name  = "ingress_cert"
     value = "arn:aws:acm:us-west-2:148660894061:certificate/c3a4d137-6457-4787-9401-498f6b66ea18"
   }
 
