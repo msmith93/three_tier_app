@@ -59,7 +59,7 @@ def diag():
         try:
             print(f"{i.metadata.name}\t{i.status.addresses}")
             node_data[i.metadata.name] = {}
-            node_data[i.metadata.name]["addresses"] = [x.get("address") for x in i.status.addresses]
+            node_data[i.metadata.name]["addresses"] = [x.address for x in i.status.addresses]
         except Exception as e:
             print(str(e))
             if i.metadata.name in node_data:
