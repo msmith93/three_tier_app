@@ -34,12 +34,12 @@ def diag():
         try:
             print("%s\t%s\t%s" %
                 (i.status.pod_ip, i.metadata.namespace, i.metadata.name))
-            if i.metadata.namespace == "default":
+            if i.metadata.namespace == "default" and "database" not in i.metadata.name:
                 pod_data[i.metadata.name] = {}
                 pod_data[i.metadata.name]["pod_ip"]  = i.status.pod_ip
                 pod_data[i.metadata.name]["host_ip"]  = i.status.host_ip
         
-                resp = requests.get(f"http://{i.status.pod_ip}/health", timeout=0.001)
+                resp = requests.get(f"http://{i.status.pod_ip}/health", timeout=0.5)
                 pod_data[i.metadata.name]["health"] = resp.text
 
                 print(i.spec.containers)
