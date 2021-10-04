@@ -26,33 +26,40 @@ def health():
 def diag():
     config.load_incluster_config()
 
-
     k8s_client = client.CoreV1Api()
 
     print("\nList of pods")
     pod_data = {}
     for i in k8s_client.list_pod_for_all_namespaces().items:
-        print("%s\t%s\t%s" %
-              (i.status.pod_ip, i.metadata.namespace, i.metadata.name))
-        if i.metadata.namespace == "default":
-            pod_data[i.metadata.name] = {}
-            pod_data[i.metadata.name]["ip"]  = i.status.pod_ip
-    
-            resp = requests.get(f"http://{i.status.pod_ip}/health")
-            pod_data[i.metadata.name]["health"] = resp.text
+        try:
+            print("%s\t%s\t%s" %
+                (i.status.pod_ip, i.metadata.namespace, i.metadata.name))
+            if i.metadata.namespace == "default":
+                pod_data[i.metadata.name] = {}
+                pod_data[i.metadata.name]["ip"]  = i.status.pod_ip
+        
+                resp = requests.get(f"http://{i.status.pod_ip}/health")
+                pod_data[i.metadata.name]["health"] = resp.text
 
-            print(i.spec.containers)
-            for container in i.spec.containers:
-                if "nginx" in container.image:
-                    try:
-                        pod_data[i.metadata.name]["nginx_version"] = container.image.split(':')[-1]
-                    except:
-                        pod_data[i.metadata.name]["nginx_version"] = "UnableToRetrieve"
+                print(i.spec.containers)
+                for container in i.spec.containers:
+                    if "nginx" in container.image:
+                        try:
+                            pod_data[i.metadata.name]["nginx_version"] = container.image.split(':')[-1]
+                        except:
+                            pod_data[i.metadata.name]["nginx_version"] = "UnableToRetrieve"
+        except Exception as e:
+            print(str(e))
+            pod_data[i.metadata.name]["diag_error"] = True
 
     node_data = {}
     for i in k8s_client.list_node().items:
-        print(f"{i.metadata.name}\t{i.status.addresses}")
-        node_data[i.metadata.name] = i.status.addresses
+        try:
+            print(f"{i.metadata.name}\t{i.status.addresses}")
+            node_data[i.metadata.name] = i.status.addresses
+        except Exception as e:
+            print(str(e))
+            node_data[i.metadata.name]["diag_error"] = True
 
     
     return {"pod_data": pod_data, "node_data": node_data}

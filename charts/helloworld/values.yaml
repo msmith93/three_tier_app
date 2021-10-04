@@ -15,7 +15,7 @@ nginx:
 
 image:
   repository: 148660894061.dkr.ecr.us-west-2.amazonaws.com/helloworld
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   # Overrides the image tag whose default is the chart appVersion.
   tag: "latest"
 
