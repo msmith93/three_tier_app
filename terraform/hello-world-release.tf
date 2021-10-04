@@ -27,7 +27,7 @@ resource "helm_release" "hello_world_release" {
 
   set {
     name  = "ingress_cert"
-    value = aws_acm_certificate.arn
+    value = aws_acm_certificate.cert.arn
   }
 
   # Ensure helm release is not installed before ALB ingress controller is installed
