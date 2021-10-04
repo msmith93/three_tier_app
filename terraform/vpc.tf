@@ -3,8 +3,18 @@ variable "region" {
   description = "AWS region"
 }
 
+variable "failover_region" {
+  default     = "us-east-2"
+  description = "AWS region"
+}
+
 provider "aws" {
   region = var.region
+}
+
+provider "aws" {
+  alias  = "east"
+  region = var.failover_region
 }
 
 data "aws_availability_zones" "available" {}
